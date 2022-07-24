@@ -1,0 +1,9 @@
+{
+  "name": "@jsm",
+  "settings": {
+    "version": "1.2.0",
+    "description": "JsMessenger api for lmfcli"
+  },
+  "author": "ns65M0YSbm0F1WnD1oDy",
+  "entry": "app/worker.js"
+}

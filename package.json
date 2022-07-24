@@ -1,0 +1,21 @@
+{
+  "name": "jsmessenger",
+  "version": "1.5.0",
+  "description": "Powerful Messenger built on a javascript express server",
+  "main": "start.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": "./start.js",
+  "author": "FarewellNehir",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "chalk": "^4.0.0",
+    "keypress": "^0.2.1",
+    "node-key-sender": "^1.0.11",
+    "node-mouse": "^0.0.2",
+    "sound-play": "^1.1.0",
+    "wio.db": "^4.0.22"
+  }
+}

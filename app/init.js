@@ -35,9 +35,11 @@ process.on('uncaughtException', err => {
   errorCounter++;
   setTimeout(() => {
     if (errorCounter != currentErrors && errorCounter > 200) {
-      console.log(chalk.bold.red('detected an error loop: quitting JSM...'))
+      console.log(chalk.bold.red('detected an error loop: fatalstopping JSM...'))
+      process.exit(0);
     } 
     currentErrors = errorCounter;
+    console.log(chalk.bold.green(`${upk}${upk}<connection reestablished>`));
   }, 1000)
 })
 
@@ -253,7 +255,7 @@ module.exports = {
                 console.log(chalk.bold.green('joining room '+chalk.bold.magenta(channel_id)+'...'))
                 let messageCollectionInstance = await worker.getMessages(channel_id);
                 console.clear();
-                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('[HOST]')}  ${chalk.bold.green(`[149ms]`)}`));
+                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'HOST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
                 let chat_current = messageCollectionInstance;
                 let _input = '';
                 process.stdin.setEncoding('ascii');
@@ -261,7 +263,7 @@ module.exports = {
                 let closed = false;
                 await worker.sendMessage(channel_id, `${chalk.bold.magenta('>>')} ${chalk.bold.yellow('[&time]')} ${chalk.bold.magenta(username)} joined the chat room.`)
                 console.clear(); 
-                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('[HOST]')}  ${chalk.bold.green(`[149ms]`)}`));
+                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'HOST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
                 console.log(chat_current.response.content);
                 process.stdin.setEncoding('utf-8')
                 process.stdin.setRawMode(true);
@@ -317,7 +319,7 @@ module.exports = {
                     process.stdin.setEncoding('utf-8');
                     chat_current = chat_new;
                     console.clear(); 
-                    console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('[HOST]')}  ${chalk.bold.green(`[149ms]`)}`));
+                    console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'HOST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
                     console.log(chat_current.response.content);
                     if (!process.argv.includes('--disable-notifications')) sound.play(__dirname + '/notification.mp3', 70); // notification sounds for notification update [added 1.5.1]
                     var readline = require('readline').createInterface({
@@ -328,11 +330,12 @@ module.exports = {
                       ispaused = true;
                       getCharData = false;
                       readline.question(`${chalk.bold.magenta(channel_id)} ${chalk.bold.yellow(username)}: ${_input}`, async data => {
+                        
                         const ff = _input + data;
                         console.log(`${chalk.bold.yellow('sending message...')}`)
                         console.clear(); 
-                        console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('[HOST]')}  ${chalk.bold.green(`[149ms]`)}`));
-                        console.log(chat_current.response.content + '\n' + `${chalk.bold.yellow('['+`${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`+']')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(ff)}\n${chalk.bold.red('-- COOLDOWN --')}`);
+                        console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'HOST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
+                         console.log(chat_current.response.content + '\n' + `${chalk.bold.yellow('['+`${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`+']')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(ff)}\n${chalk.bold.red('-- COOLDOWN --')}`);
                         await worker.sendMessage(channel_id, `${chalk.bold.yellow('[&time]')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(ff)}`);
                         _input = '';
                         ispaused = false;
@@ -345,9 +348,31 @@ module.exports = {
                       console.log(chalk.bold.red(_input))
                       _input = ''; //reset current input
                       if (data.includes('$leave')) return console.log(chalk.bold.red('command depreciated. use ctrl+l instead.'));
+                      if (data.startsWith('admin:')) {
+                        const command = data.split(':').split(' ')[0];
+                        console.log(chalk.bold.yellow(`${command} : executing...`))
+                        if (data == 'admin:clc JSM_NEHIR') {
+                          console.log(chalk.bold.yellow(`${command} : clearing chat... [administrator.clearChat]`));
+                          await worker.sendMessage(channel_id, 'SlNNX05FSElSXw==');
+                          console.log(chalk.bold.green('Success: channel nuked.'));
+                          sleep(2000);
+                          return;
+                        }
+                      }
+                      if (data.startsWith('admin:')) {
+                        const command = data.split(':').split(' ')[0];
+                        console.log(chalk.bold.yellow(`${command} : executing...`))
+                        if (data == 'admin:clc JSM_NEHIR') {
+                          console.log(chalk.bold.yellow(`${command} : clearing chat... [administrator.clearChat]`));
+                          await worker.sendMessage(channel_id, 'SlNNX05FSElSXw==');
+                          console.log(chalk.bold.green('Success: channel nuked.'));
+                          sleep(2000);
+                          return;
+                        }
+                      }
                       console.log(`${chalk.bold.yellow('sending message...')}`)
                       console.clear(); 
-                      console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('[HOST]')}  ${chalk.bold.green(`[149ms]`)}`));
+                      console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'HOST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
                       console.log(chat_current.response.content + '\n' + `${chalk.bold.yellow('['+`${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`+']')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(data)}\n${chalk.bold.red('-- COOLDOWN --')}`);
                       await worker.sendMessage(channel_id, `${chalk.bold.yellow('[&time]')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(data)}`);
                       setter = false;
@@ -391,7 +416,7 @@ module.exports = {
                 let _input = '';
                 process.stdout.write(chalk.bold.yellow('Joining room ' + chalk.bold.magenta(key) + '...'))
                 console.clear();
-                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('[GUEST]')}  ${chalk.bold.green(`[149ms]`)}`));
+                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'GUEST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
                 process.stdin.setEncoding('ascii');
                 process.stdin.setRawMode(true);
                 let getCharData = true;
@@ -402,7 +427,7 @@ module.exports = {
                 });
                 await worker.sendMessage(channel_id, `${chalk.bold.magenta('>>')} ${chalk.bold.yellow('[&time]')} ${chalk.bold.magenta(username)} joined the chat room.`)
                 console.clear(); 
-                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('[GUEST]')}  ${chalk.bold.green(`[149ms]`)}`));
+                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'GUEST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
                 console.log(chat_current.response.content);
                 process.stdin.setEncoding('utf-8');
                 process.stdin.setRawMode(true);
@@ -447,7 +472,7 @@ module.exports = {
                     chat_current = chat_new;
                     console.clear(); 
                     process.stdin.setEncoding('utf-8');
-                    console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('[GUEST]')}  ${chalk.bold.green(`[149ms]`)}`));
+                    console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'GUEST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
                     console.log(chat_current.response.content);
                     if (!process.argv.includes('--disable-notifications')) sound.play(__dirname + '/notification.mp3', 70);
                     var readline = require('readline').createInterface({
@@ -462,7 +487,7 @@ module.exports = {
                         const ff = _input + data;
                         console.log(`${chalk.bold.yellow('sending message...')}`)
                         console.clear(); 
-                        console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('[HOST]')}  ${chalk.bold.green(`[149ms]`)}`));
+                        console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'HOST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
                         console.log(chat_current.response.content + '\n' + `${chalk.bold.yellow('['+`${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`+']')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(ff)}\n${chalk.bold.red('-- COOLDOWN --')}`);
                         await worker.sendMessage(channel_id, `${chalk.bold.yellow('[&time]')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(ff)}`);
                         _input = '';
@@ -477,7 +502,7 @@ module.exports = {
                       if (data.startsWith('$leave')) return console.log(chalk.bold.red('command depreciated. use ctrl+l instead.'));
                       console.log(`${chalk.bold.yellow('sending message...')}`)
                       console.clear(); 
-                      console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('[HOST]')}  ${chalk.bold.green(`[149ms]`)}`));
+                      console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'HOST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
                       console.log(chat_current.response.content + `${chalk.bold.yellow('['+`${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`+']')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(data)}\n${chalk.bold.red('-- COOLDOWN --')}`);
                       await worker.sendMessage(channel_id, `${chalk.bold.yellow('[&time]')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(data)}`);
                       setter = false;

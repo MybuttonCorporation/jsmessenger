@@ -1,6 +1,6 @@
 {
   "name": "jsmessenger",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Powerful Messenger built on a javascript express server",
   "main": "start.js",
   "scripts": {

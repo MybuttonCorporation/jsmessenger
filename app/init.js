@@ -1,6 +1,7 @@
+const { Console } = require('console');
 const { stdin, stdout} = require('process');
-const sound = require("sound-play");
-const 
+  const sound = require("sound-play");
+let
     chalk  = require('chalk'),
     worker = require('./worker.js'),
     wiodb = require('wio.db'),
@@ -56,10 +57,44 @@ process.on('beforeExit', async() => {
 })
 module.exports = {
     async start(args = []) {
+      let index = 0;
+      args.forEach(argmnt => {
+        if (argmnt.startsWith("--dblocation=")) {
+          let arg = args[index+0];
+          const final = arg;
+          if (final.startsWith('--dblocation=')) {
+            if (fs.existsSync(final.replace('--dblocation=',''))) {
+              db = new wiodb.JsonDatabase({databasePath: final.replace('--dblocation=','')})
+              console.log(chalk.bold.green('Using database @ ' + final.replace('--dblocation=','')))
+            } else {
+              console.log(chalk.bold.red('db.initialize({location?: ..dblocation, {}?: ...Settings}): Unknown database: ' + final.replace('--dblocation=','')));
+              console.log(chalk.bold.red('Using default path. [' + process.cwd() + ']'))
+              sleep(2000)
+            }
+          }
+        }
+        index++;
+      })
       if (db.has('user')) {
-        console.log('logging in...')
+        process.stdout.write('logging in...')
+        let i = 0;
+        let loginInterval = await setInterval(() => {
+          if (i == 0) {
+            process.stdout.write(chalk.bold.dim('\rlogging in... [•  ]'));
+            i++;
+          }
+          else if (i == 1) {
+            process.stdout.write(chalk.bold.black('\rlogging in... [•• ]'))
+            i++;
+          }
+          else {
+            process.stdout.write(chalk.bold.white('\rlogging in... [•••]'))
+            i = 0;
+          }
+        }, 1000)
         if (await (await worker.user.getUserData(db.get('user.id'), 'online')).response) {
-          console.log(chalk.bold.red('You\'re already logged in from another location.'));
+          clearInterval(loginInterval);
+          console.log(chalk.bold.red('\rYou\'re already logged in from another location.'));
           console.log(chalk.bold.red('This may cause problems with correctly displaying online status to other users.'))
           console.log(chalk.bold.red('Are you sure you would like to continue?'));
           const rlf = require('readline').createInterface({
@@ -75,7 +110,7 @@ module.exports = {
               process.exit(0);
             }
           })
-        } else this.continue(args);
+        } else { this.continue(args); clearInterval(loginInterval); }
       } else {
         console.log('creating account...');
         sleep(1000);
@@ -254,8 +289,10 @@ module.exports = {
                 console.log(chalk.bold.yellow('>> Channel Name : ') + chalk.bold.magenta(channel_name)) 
                 console.log(chalk.bold.green('joining room '+chalk.bold.magenta(channel_id)+'...'))
                 let messageCollectionInstance = await worker.getMessages(channel_id);
-                console.clear();
-                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'HOST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
+                console.clear();                    
+                let $jointype = 'GUEST';
+                if (db.get('user.name') == 'Nehir') $jointype = chalk.bold.redBright('ADMIN');
+                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+$jointype+']')}  ${chalk.bold.green(`[149ms]`)}`));
                 let chat_current = messageCollectionInstance;
                 let _input = '';
                 process.stdin.setEncoding('ascii');
@@ -263,7 +300,7 @@ module.exports = {
                 let closed = false;
                 await worker.sendMessage(channel_id, `${chalk.bold.magenta('>>')} ${chalk.bold.yellow('[&time]')} ${chalk.bold.magenta(username)} joined the chat room.`)
                 console.clear(); 
-                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'HOST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
+                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+$jointype+']')}  ${chalk.bold.green(`[149ms]`)}`));
                 console.log(chat_current.response.content);
                 process.stdin.setEncoding('utf-8')
                 process.stdin.setRawMode(true);
@@ -416,7 +453,6 @@ module.exports = {
                 let _input = '';
                 process.stdout.write(chalk.bold.yellow('Joining room ' + chalk.bold.magenta(key) + '...'))
                 console.clear();
-                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'GUEST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
                 process.stdin.setEncoding('ascii');
                 process.stdin.setRawMode(true);
                 let getCharData = true;
@@ -427,7 +463,7 @@ module.exports = {
                 });
                 await worker.sendMessage(channel_id, `${chalk.bold.magenta('>>')} ${chalk.bold.yellow('[&time]')} ${chalk.bold.magenta(username)} joined the chat room.`)
                 console.clear(); 
-                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'GUEST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
+                console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+db.get('user.id') == 'l5tmjrve0.hiyk8nv2e6o' ? chalk.bold.redBright('ADMIN') : 'GUEST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
                 console.log(chat_current.response.content);
                 process.stdin.setEncoding('utf-8');
                 process.stdin.setRawMode(true);
@@ -464,15 +500,52 @@ module.exports = {
                 let setter = false;
                 let ispaused = false;
                 let lastReadline = null;
-                setInterval(async () => {
+                let loadInterval = setInterval(async () => {
                   chat_new = await worker.getMessages(channel_id)
                   if (!setter || chat_current.response.content != chat_new.response.content) {
                     if (lastReadline != null) { lastReadline.close() };
                     setter = true;
                     chat_current = chat_new;
+                    if (chat_current.response.content.endsWith('for a client-sided update.\n')) {
+                      clearInterval(loadInterval);
+                      console.log(`${chalk.bold.red('\nLOCAL-SYSTEM-MESSAGE ')}${chalk.bold.dim('Your client is going to restart due to an auto update.')}`)
+                      sleep(2000);
+                      console.log(`${chalk.bold.yellow('Updating JSM...')}`);
+                      let { exec } = require('child_process')
+                      let updateCommand = await exec(`npm install jsmesseger`);
+                      let d = 0;
+                      updateCommand.stdout.on('data', str => {
+                        process.stdout.write(chalk.bold.yellow('\rupdating... [' + '='.repeat(d) + ']'));
+                        d++;
+                      })
+                      updateCommand.on('close', () => {
+                        console.log('\r' + ' '.repeat(process.stdout.columns));
+                        sleep(1000);
+                        console.log(chalk.bold.green('Update successful.'));
+                        sleep(1000);
+                        console.log(chalk.bold.yellow('quitting...'));
+                        sleep(1000);
+                        worker.user.logoutAsUser(db.get('user.id'));
+                        console.log(chalk.bold.red('Kicked: CLIENT_UPDATE'));
+                        process.exit(0);  
+                        return;
+                      })
+                    }
+                    if (chat_current.response.content.endsWith('for a server-sided update.\n')) {
+                      console.log(chalk.bold.red('\nGLOBAL-SYSTEM-MESSAGE ') + `${chalk.bold.white(`The server is going to restart in 5 seconds.`)}`)
+                      sleep(3000)
+                      setTimeout(async () => {
+                        console.log(chalk.bold.red('\nLOCAL-SYSTEM-MESSAGE ') + `${chalk.bold.white('Server rebooting...')}`);
+                        await worker.user.logoutAsUser(db.get('user.id'));
+                        console.log(chalk.bold.red('Kicked from the server: SERVER_RESTART'));
+                        process.exit(0);
+                      }, 5000);
+                    }
                     console.clear(); 
                     process.stdin.setEncoding('utf-8');
-                    console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'GUEST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
+                    let $jointype = 'GUEST';
+                    if (db.get('user.name') == 'Nehir') $jointype = chalk.bold.redBright('ADMIN');
+                    console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+ $jointype +']')}  ${chalk.bold.green(`[149ms]`)}`));
                     console.log(chat_current.response.content);
                     if (!process.argv.includes('--disable-notifications')) sound.play(__dirname + '/notification.mp3', 70);
                     var readline = require('readline').createInterface({
@@ -482,12 +555,14 @@ module.exports = {
                     lastReadline = readline;
                     if (_input.length > 0) {
                       ispaused = true;
-                      getCharData = false;
-                      readline.question(`${chalk.bold.magenta(channel_id)} ${chalk.bold.yellow(username)}: ${_input}`, async data => {
-                        const ff = _input + data;
+                      getCharData = true;
+                      readline.question(`${chalk.bold.magenta(channel_id)} ${chalk.bold.yellow(username)}: `, async data => {
+                        const ff = data;
                         console.log(`${chalk.bold.yellow('sending message...')}`)
                         console.clear(); 
                         console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'HOST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
+                        let $jointype = 'GUEST';
+                        if (db.get('user.name') == 'Nehir') $jointype = chalk.bold.redBright('ADMIN');
                         console.log(chat_current.response.content + '\n' + `${chalk.bold.yellow('['+`${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`+']')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(ff)}\n${chalk.bold.red('-- COOLDOWN --')}`);
                         await worker.sendMessage(channel_id, `${chalk.bold.yellow('[&time]')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(ff)}`);
                         _input = '';
@@ -496,14 +571,16 @@ module.exports = {
                         readline.close();
                         return;
                       })
+                      readline.write(_input)
                     } // other message collector [a message was sent while the client was typing]
                     if (!ispaused) readline.question(`${chalk.bold.magenta(channel_id)} ${chalk.bold.yellow(username)}: ${_input.replace('\r', '')}`, async data => {
                       _input = ''; //reset current input
                       if (data.startsWith('$leave')) return console.log(chalk.bold.red('command depreciated. use ctrl+l instead.'));
                       console.log(`${chalk.bold.yellow('sending message...')}`)
                       console.clear(); 
-                      console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+username == 'Nehir' ? chalk.bold.redBright('ADMIN') : 'HOST'+']')}  ${chalk.bold.green(`[149ms]`)}`));
-                      console.log(chat_current.response.content + `${chalk.bold.yellow('['+`${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`+']')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(data)}\n${chalk.bold.red('-- COOLDOWN --')}`);
+                      console.log(chalk.bold.magenta(`[${channel_id}]  ${chalk.bold.yellow('['+$jointype+']')}  ${chalk.bold.green(`[149ms]`)}`));
+                      console.log(chat_current.response.content + `${chalk.bold.yellow('['+`${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`+']')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(data)}\n${chalk.bold.yellow('Sending...')}`);
+                      process.stdout.write(`${chalk.bold.magenta('>> ')}${chalk.bold.yellow(username)}: `);
                       await worker.sendMessage(channel_id, `${chalk.bold.yellow('[&time]')} ${chalk.bold.magenta(username)}: ${chalk.bold.white(data)}`);
                       setter = false;
                       readline.close();

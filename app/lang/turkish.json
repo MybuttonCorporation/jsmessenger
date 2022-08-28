@@ -1,0 +1,66 @@
+{
+    "strings": {
+        "input": {
+            "mkacc_reg_uname": "Kullanıcı adını gir (hesap oluşturma)",
+            "mkacc_uname_too_short": "Kullanıcı adın çok kısa! 3 harften uzun olan bir isim seçmelisin."
+        },
+        "initial": {
+            "load_1": "Oturum açılıyor...",
+            "already_logged_in": "Hesabına başka bir lokasyondan giriş yapmış bulunmaktasın.\nBu hata beklenmeyen bir çıkıştan oluşmuş olabilir.\nGirmek istediğine emin misin?",
+            "exit_login": "çıkış:oturumzatenaçık",
+            "load_mkacc": "hesap oluşturuluyor...",
+            "first_login": "Bu ilk girişin! Hesabın kaydedildi.\nUUID'in ",
+            "first_login_2": ".\nBu kodu paylaşarak onların seni arkadaş olarak eklemesini sağlayabilirsin.\nBirini arkadaş eklemek için, ",
+            "first_login_3": " komutunu menüye gir.",
+            "restart": "Devam etmek için JSM'i yeniden başlat."
+        },
+        "menu": {
+            "welcome": "Hoş geldin!",
+            "info": "Devam etmek için bir komut yaz veya enter tuşu ile kanal menüsüne git.\nkomut listesi için 'help' yaz.",
+            "ucmd": "Bilinmeyen komut.",
+            "ch": {
+                "info": "< ve > tuşlarına basarak opsiyonu değiştir, enter tuşu ile devam et veya geri tuşu ile geri dön.",
+                "new": "Yeni Kanal",
+                "find": "Kanal bul",
+                "nc": {
+                    "enter_name": "Kanal ismi gir (rastgele bir isim için enter tuşuna bas)"
+                },
+                "fc": {},
+                "creating": "Kanal oluşturuluyor...",
+                "created": "Kanal oluşturuldu.",
+                "joining": "Kanala katılınıyor: ",
+                "leave": "Kanaldan çıkılıyor...",
+                "connect": "Kanala bağlanılıyor: ",
+                "enoch": "Şu id ile bir kanal yok: "
+            }
+        },
+        "exception": {
+            "pkgloss": "Sunucuda paket eksikliği: tekrar bağlanılıyor...",
+            "errloop": "Bir hata çemberi bulundu: JSM kapatılıyor.",
+            "reconnect": "bağlantı tekrar kuruldu",
+            "nosupport": "Üzgünüm, bu konsol JSM'yi desteklemiyor.",
+            "newkb": "v1.5.0'dan beri b ve y tuşları değiştirildi. Enter ve geri tuşlarını kullan.",
+            "dlv": "Desteksiz komut. (ctrl+l ile ayrıl)"  
+        },
+        "quit": {
+            "quit_1": "JSM'den çıkılıyor...",
+            "quit_noacc": "Hesap oluşturulmadan çıkıldı.",
+            "quit_2": "JSM'den çıkıldı."
+        },
+        "messages": {
+            "FC_AWAIT_SEND_MESSAGE": "Gönderiliyor..."
+        },
+        "menus": {
+            "friends": {
+                "load": "Kullanıcı arkadaşları yükleniyor...",
+                "alrfr": "Bu kullanıcı zaten senin arkadaşın.",
+                "addToList": "Bu kullanıcı arkadaş listene eklendi.",
+                "nowFriend": " artık senin arkadaşın."
+            },
+            "mail": {
+                "load": "Posta listesi indiriliyor..."
+            }
+        }
+    },
+    "ERR_UNX": "Böyle bir kullanıcı yok!"
+}

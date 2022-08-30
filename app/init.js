@@ -36,6 +36,7 @@ let currentErrors = 0;
 let errorCounter = 0;
 process.on('uncaughtException', err => {
   console.log(chalk.bold.red(`\n<${_lang.strings.exception.pkgloss}>\n<${err.message}>`));
+  if (process.argv.includes('--dev')) console.log(chalk.bold.red(err.stack));
   errorCounter++;
   setTimeout(() => {
     if (errorCounter != currentErrors && errorCounter > 200) {
@@ -99,6 +100,7 @@ module.exports = {
           console.log(data);
         })
         updater.stdout.on('close', data => {
+          require('../func/release').run([_lts]);
           console.log(chalk.bold.yellow('JSM has been updated.\nPlease Restart to continue.'));
           process.exit(0);
         })
@@ -172,6 +174,10 @@ module.exports = {
           );
           rl.question(`${chalk.bold.blue(_lang.strings.input.mkacc_reg_uname)}${chalk.bold.magenta(': ')}`, regname => {
             let special_chars = [...' ğüçöı@%&/()=?_!\'^+>£#$½{[]}\\|,.₺æß'];
+            if (regname.length < 3 ) {
+              console.log(chalk.bold.red(_lang.strings.input.mkacc_uname_too_short));
+              return this.continue(args);
+            }
             special_chars.forEach(ch => {
               if (regname.includes(ch)) {
                 console.log(chalk.bold.red('Your name contains the character ' + ch + ' which is an illegal character.'));
@@ -229,7 +235,7 @@ module.exports = {
                 console.log('quit JSM');
                 process.exit(0);
               }
-              else if (name.length < 1 && name != '\r' && !name.startsWith('#nick:')) {
+              else if (name?.length < 1 && name != '\r' && !name.startsWith('#nick:')) {
                 console.log(chalk.bold.magenta('\n>> ') + chalk.bold.red(chalk.bold.underline(_lang.strings.menu.ucmd)));
                 sleep(3000);
                 readline.close()

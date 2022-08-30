@@ -50,8 +50,8 @@ function start(args = []) {
     }    
     const fs = require('fs');
     const util = require('./util/base');
-    if (fs.existsSync(process.cwd() + '/db.json')) {
-        let f = require(process.cwd() + '/db.json');
+    if (fs.existsSync(process.cwd() + '/lmfdb.json')) {
+        let f = require(process.cwd() + '/lmfdb.json');
         if (f?.user && f?.user?.id && f?.cli_lang && f?.user?.name) {
           function sleep(ms = 0) {
            var start = new Date().getTime();
@@ -79,13 +79,13 @@ function start(args = []) {
         }
       };
     if (!language.isSet) language.setup();
-    if (existsSync('func/' + args[0]?.replace('--', '') + '.js')) {
+    if (existsSync(__dirname + '/func/' + args[0]?.replace('--', '') + '.js')) {
         if (args[0].length < 4) return require('./util/base').util.log(args[0], 'unknown option (try jsm -'+args[0].replace('--', '')+')');
         let f = require('./func/' + args[0]?.replace('--', '') + '.js')
         f.run(args.slice(1));
         return;
     }
-    else if (existsSync('func/' + args[0]?.replace('-', '') + '.js')) {
+    else if (existsSync(__dirname + '/func/' + args[0]?.replace('-', '') + '.js')) {
         if (args[0].length < 2) return require('./util/base').util.log(args[0], 'unknown option (try jsm --'+args[0].replace('-', '')+')');
         let f = require('./func/' + args[0]?.replace('-', '') + '.js')
         f.run(args.slice(1));
@@ -94,7 +94,7 @@ function start(args = []) {
     else if (args[0] && !['--join', '--dev', '--disable-notifications'].includes(args[0])) {
         return require('./util/base').util.log(args[0], 'bad parameter.');
     }
-    else return require('./util/base.js').util.run_task('start', args);
-
+    if (language.isSet) return require('./util/base.js').util.run_task('start', args);
+    process.exit(0);
 }
 start(process.argv.slice(2));

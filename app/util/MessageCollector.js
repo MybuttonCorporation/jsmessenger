@@ -1,6 +1,6 @@
 class MessageCollectionInstance {
     __messages = {
-        '__DATA': [],
+        '__DATA': [""],
            FromString(__S="") {
             if (!__S.includes('\n')) return this.__DATA = __S;
             let __S_DATA = __S.split('\n');

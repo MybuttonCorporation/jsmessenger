@@ -68,7 +68,7 @@ let showChannel = async function(channel_id = '#jsm', username = 'Anonymous', jt
           let loadInterval = setInterval(async () => {
             chat_new = await worker.getMessages(channel_id);
             NewContent.__messages.FromString(chat_new.response?.content);
-            if (chat_new.response.remoteContent != undefined) {
+            if (chat_new.response?.remoteContent != undefined) {
               let data = chat_new.response.remoteContent;
               let { message, type } = data;
               if (type == 'ERR') {
@@ -82,11 +82,32 @@ let showChannel = async function(channel_id = '#jsm', username = 'Anonymous', jt
               }
             }
 
-            if (!setter || chat_new.response.content != CurContent.GetData('\n').format('joined')) {
+            if (!setter || chat_new.response && chat_new.response?.content != CurContent.GetData('\n').format('joined')) {
               if (lastReadline != null) { lastReadline.close() };
                setter = true;
               chat_current = chat_new;
-              CurContent.__messages.__DATA = NewContent.__messages.__DATA
+              CurContent.__messages.__DATA = NewContent.__messages.__DATA;
+              const notif = require('node-notifier');
+              const path = require('path');
+              let newmsg = `${chat_current.response.content}`;
+              let spl = newmsg.split('\n');
+              let last = `${spl[spl.length - 2].replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '').split(' ').slice(2).join(' ')}`;
+              if ('<chat cleared by an administrator>'.includes(last) || last.includes('[SERVER]') || last.toLocaleLowerCase().includes('for a client-sided update') || last.toLocaleLowerCase().includes('for a server-sided update')) last = `${spl[spl.length - 2].replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '')}`;
+              let cleanName = `${username.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '').split(' ').slice(2).join(' ')}`;
+              notif.notify(
+                {
+                  title: 'New message in ' + channel_id + ':',
+                  appID: 'JSMessenger',
+                  message: `${last}`,
+                  icon: path.join(__dirname, 'jsm.png'),
+                  sound: false, // Only Notification Center or Windows Toasters
+                  wait: true // Wait with callback, until user action is taken against notification, does not apply to Windows Toasters as they always wait or notify-send as it does not support the wait option
+                },
+                function (err, response, metadata) {
+                  // Response is response from notification
+                  // Metadata contains activationType, activationAt, deliveredAt
+                }
+              );
               if (chat_current.response.content.endsWith(`user ${username} has been kicked by ${chalk.bold.red('[remote:admin]')}.\n`)) {
                 let log = msg => console.log(`\n${chalk.bold.yellow('['+chalk.bold.red('remote')+']')} ${msg}`);
                 log(`you have been kicked from ${chalk.bold.magenta(`${channel_id}`)}.`);
@@ -183,3 +204,7 @@ let showChannel = async function(channel_id = '#jsm', username = 'Anonymous', jt
           }, 1000);
   };
 module.exports = showChannel;
+function sleep(ms = 0) {
+  var start = new Date().getTime();
+  while (new Date().getTime() < start + ms);
+}

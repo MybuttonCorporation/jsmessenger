@@ -44,6 +44,74 @@ function remoteMessage(type, message) {
     console.log(chalk.bold.yellow(`\n[${data('remote')}] `) + chalk.bold.white(message))
 }
 module.exports = {
+    async createProxy(uid = "") {
+        let events = require('events');
+        let listener = new events.EventEmitter();
+        let proxy = { listener, connection: {authentication: false, path: '/proxy/'+uid, server: 'https://jsmsgserver.nehirkedi.repl.co/', port: 8080}, async destroy() { clearInterval(interval); },
+            async authenticate(password = "") {
+                let res = await request('POST', '/proxy/authenticate', {uid: uid, password: password});
+                return res.response;
+            },
+            async send(command = "") {
+                let res = await request('POST', '/proxy/run', {uid: uid, command: command});
+                if (res.response?.PROXY_CONNECTION?.req == 'question') {
+                    let data = res.response?.PROXY_CONNECTION;
+                    proxy.listener.emit('question', {title: data?.title, state: data?.state, res: data?.res});
+                }
+                else if (res.response?.PROXY_CONNECTION?.req == 'log') {
+                    let data = res.response?.PROXY_CONNECTION.message;
+                    console.log(`${chalk.bold.yellow('['+chalk.bold.red('REMOTE/PROXY/'+uid.toLocaleUpperCase())+']')}${chalk.bold.dim(':')} ${chalk.bold.bgBlack.magenta(data)}`);
+                }
+                else if (res.response?.PROXY_CONNECTION) proxy.listener.emit(res.response?.PROXY_CONNECTION?.req, res.response?.PROXY_CONNECTION);
+                return res;
+            }
+        };
+        let path = "/proxy";
+        let interval = setInterval(async function() {
+            let res = await request('POST', path, {uid: uid});
+            path = "/proxy"
+            if (res.response?.PROXY_CONNECTION?.req == 'question') {
+                let data = res.response?.PROXY_CONNECTION;
+                proxy.listener.emit('question', {title: data?.title, state: data?.state, res: data?.res});
+            }
+            if (res.response?.PROXY_CONNECTION?.req == 'log') {
+                let data = res.response?.PROXY_CONNECTION.message;
+                console.log(`${chalk.bold.yellow('['+chalk.bold.red('REMOTE/PROXY/'+uid.toLocaleUpperCase())+']')}${chalk.bold.dim(':')} ${chalk.bold.bgBlack.magenta(data)}`);
+            }
+        }, 2000);
+        return proxy;
+    },
+    async request(type, path, body = {}) {
+        let basePath = 'https://jsmsgserver.nehirkedi.repl.co';
+        let requestPath = basePath + path;
+        let res = {};
+        if (type == 'GET') {
+            try {
+            let data = await axios.get(requestPath);
+            res.status = data.status;
+            res.statusText = data.statusText;
+            res.response = data.data;
+            } catch (e) {
+                return 400;
+            }
+        };
+        if (type == 'POST') {
+            try {
+            let data       = await axios.post(requestPath, body);
+            res.status     = data.status;
+            res.statusText = data.statusText;
+            res.response   = data.data;
+            } catch (e) {
+                return 400;
+            }
+        };
+        if (res.response?.remoteContent != undefined) {
+            let data = res.response.remoteContent;
+            let { message, type } = data;
+            remoteMessage(type, message);
+        }
+        return res;
+    },
     async createChannel(cname = "", channelID = "") {
         let body = {
             channelID: channelID,

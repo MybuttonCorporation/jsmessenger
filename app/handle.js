@@ -57,7 +57,9 @@ class handle {
     //$type must be err, notice or success
     con_printf($type = ("notice", "err", "success"), $data) {
         const COLOR = $type === 'notice' ? 'blue' : $type === 'err' ? 'red' : 'green';
-        console.log(chalk.bold.white('lmf-cli ') + chalk[COLOR]($type), $data)
+        console.log(chalk.bold.bgGray.white('jsm ') + chalk[COLOR]($type), $data)
+        //https://www.netflix.com/watch/70196266?trackId=200257858
+        // good girl with hot tits
     }
     
 }

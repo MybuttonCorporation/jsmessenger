@@ -2,7 +2,7 @@ const
     chalk = require('chalk'),
     worker = require('./worker'),
     wio = require('wio.db'),
-    db = new wio.JsonDatabase({databasePath: './db.json'});
+    db = new wio.JsonDatabase({databasePath: './lmfdb.json'});
 
 
 module.exports = {

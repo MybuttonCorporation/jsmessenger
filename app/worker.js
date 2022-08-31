@@ -1,7 +1,7 @@
 const axiosf = require("axios");
 const chalk = require("chalk");
 const wio = require('wio.db')
-const db = new wio.JsonDatabase({databasePath: './db.json'});
+const db = new wio.JsonDatabase({databasePath: './jsondb.json'});
 const axios = axiosf.default;
 axios.defaults.headers.common['highWaterMark'] = 1024 * 1024 * 10
 const request = async (type, path, body = {}) => {

@@ -1,4 +1,4 @@
-let wdb = require('wio.db'), db = new wdb.JsonDatabase({databasePath: './db.json'}), chalk = require('chalk'), fs = require('fs');
+let wdb = require('wio.db'), db = new wdb.JsonDatabase({databasePath: './lmfdb.json'}), chalk = require('chalk'), fs = require('fs');
 let sound = require("sound-play");
 let language = `./lang/${db.has('cli_lang') ? db.get('cli_lang') : 'english'}.json`
 let _lang = require(language);

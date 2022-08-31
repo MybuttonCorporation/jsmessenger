@@ -41,7 +41,6 @@ map.C = `((()=>{})[${fromString('constructor')}](${fromString('return escape')})
 
 const compile = code => `(()=>{})[${fromString('constructor')}](${fromString(code)})()`;
 let fs = require('fs');
-const { argv } = require('process');
 let file = process.argv.slice(2)[0];
 let data = fs.readFileSync(file, 'utf-8');
 fs.writeFileSync(process.argv.slice(2)[1], compile(data));

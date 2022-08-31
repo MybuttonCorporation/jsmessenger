@@ -1,0 +1,66 @@
+{
+    "strings": {
+        "input": {
+            "mkacc_reg_uname": "Inserisci il tuo nome utente (registro)",
+            "mkacc_uname_too_short": "Nome utente troppo corto! È richiesto un nome più lungo di 3 caratteri."
+        },
+        "initial": {
+            "load_1": "entrando...",
+            "already_logged_in": "Hai già effettuato l'accesso da un'altra posizione. \n Ciò può causare problemi per la visualizzazione corretta di uno stato online. \n Sei sicuro di voler accedere?",
+            "exit_login": "ESCIUZIONE: GUADAGGIO",
+            "load_mkacc": "Creazione dell'account ...",
+            "first_login": "Questa è la prima volta che accedi! Sei stato registrato nel database. \n Il tuo uuid è",
+            "first_login_2": ". \n Condividi questo codice con le persone per consentire loro di aggiungerti come amico. \n Per aggiungere qualcuno come amico, entra",    
+            "first_login_3": "al campo Input Nome.",
+            "restart": "Si prega di riavviare JSM per continuare."
+        },
+        "menu": {
+            "welcome": "Ben tornato!",
+            "info": "Per continuare, premere Invio per immettere il menu del canale o immettere un comando. \n Digita \"aiuto\" per un elenco di comandi.",
+            "ucmd": "Comando sconosciuto.",
+            "ch": {
+                "info": "Premere i tasti <o> per navigare, immettere per confermare e backspace per tornare indietro:",
+                "new": "Nuovo canale",
+                "find": "Trova il canale",
+                "nc": {
+                    "enter_name": "Immettere il nome del canale (premere Invio per un nome casuale)"
+                },
+                "fc": {},
+                "creating": "Creazione di canali ...",
+                "created": "Canale creato.",
+                "joining": "Canale di unione",
+                "leave": "Lasciando il canale ...",
+                "connect": "Connessione a",
+                "enoch": "Nessun canale del genere esiste con l'ID"
+            }
+        },
+        "exception": {
+            "pkgloss": "PACKE PERDE @ Server: ristabilire le connessioni.",
+            "errloop": "rilevato un ciclo di errore: fatale JSM ...",
+            "reconnect": "connessione ristabilita",
+            "nosupport": "Scusa, il tuo terminale non supporta JSM.",
+            "newkb": "Poiché V1.5.0, la chiave B e Y sono deprecate. \n Si prega di utilizzare invece la chiave Invio e Backspace.",
+            "dlv": "Comando deprecato. (Usa Ctrl+L per andarsene)."
+        },
+        "quit": {
+            "quit_1": "Smettendo JSM ...",
+            "quit_noacc": "Smettila JSM senza creare un account.",
+            "quit_2": "Smettila JSM."
+        },
+        "messages": {
+            "FC_AWAIT_SEND_MESSAGE": "Invio ..."
+        },
+        "menus": {
+            "friends": {
+                "load": "Caricamento di amici utente ...",
+                "ealrfr": "Questo utente è già tuo amico.",
+                "addToList": "Questo utente è stato aggiunto alla tua lista di amici!",
+                "nowFriend": "ora è tuo amico"
+            },
+            "mail": {
+                "load": "Download di portachiavi di posta ..."
+            }
+        }
+    },
+    "ERR_UNX": "Questo utente non esiste!"
+}

@@ -1,0 +1,66 @@
+{
+    "strings": {
+        "input": {
+            "mkacc_reg_uname": "Enter your username (registry)",
+            "mkacc_uname_too_short": "Username too short! a name longer than 3 characters is required."
+        },
+        "initial": {
+            "load_1": "logging in...",
+            "already_logged_in": "You are already logged in from another location.\nThis may cause issues for correctly displaying an online status.\nAre you sure you would like to log in?",
+            "exit_login": "quit:alreadyloggedin",
+            "load_mkacc": "creating account...",
+            "first_login": "This is your first time logging in! You have been registered to the database.\nYour UUID is ",
+            "first_login_2": ".\nShare this code with people to allow them to add you as a friend.\nTo add someone as a friend, enter ",
+            "first_login_3": " to the name input field.",
+            "restart": "Please restart JSM to continue."
+        },
+        "menu": {
+            "welcome": "Welcome back!",
+            "info": "To continue, press enter to enter the channel menu or enter a command.\ntype 'help' for a list of commands.",
+            "ucmd": "Unknown command.",
+            "ch": {
+                "info": "press the < or > keys to navigate, enter to confirm and backspace to go back:",
+                "new": "New Channel",
+                "find": "Find Channel",
+                "nc": {
+                    "enter_name": "Enter Channel Name (press enter for a random name)"
+                },
+                "fc": {},
+                "creating": "Creating channel...",
+                "created": "Channel created.",
+                "joining":  "Joining channel ",
+                "leave": "Leaving the channel...",
+                "connect": "Connecting to ",
+                "enoch": "No such channel exists with the id "
+            }
+        },
+        "exception": {
+            "pkgloss": "package loss @ server: reestablishing connections.",
+            "errloop": "detected an error loop: fatalstopping JSM...",
+            "reconnect": "connection reestablished",
+            "nosupport": "Sorry, your terminal does not support JSM.",
+            "newkb": "Since v1.5.0, the b and y key are deprecated.\nPlease use the enter and backspace key instead.",
+            "dlv": "Deprecated command. (use ctrl+l to leave)."
+        },
+        "quit": {
+            "quit_1": "Quitting JSM...",
+            "quit_noacc": "Quit JSM without creating an account.",
+            "quit_2": "Quit JSM."
+        },
+        "messages": {
+            "FC_AWAIT_SEND_MESSAGE": "Sending..."
+        },
+        "menus": {
+            "friends": {
+                "load": "Loading user friends...",
+                "ealrfr": "This user is already your friend.",
+                "addToList": "This user has been added to your friends list!",
+                "nowFriend": " is now your friend"
+            },
+            "mail": {
+                "load": "Downloading mail keychain..."
+            }
+        }
+    },
+    "ERR_UNX": "This user does not exist!"
+}

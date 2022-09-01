@@ -1,0 +1,66 @@
+{
+    "strings": {
+        "input": {
+            "mkacc_reg_uname": "Entrez votre nom d'utilisateur (registre)",
+            "mkacc_uname_too_short": "Nom d'utilisateur trop court ! un nom doit comporter plus de 3 lettres."
+        },
+        "initial": {
+            "load_1": "se connecter...",
+            "already_logged_in": "Vous êtes déjà connecté.\nLa connexion peut entraîner des problèmes d'affichage correct de votre état.\nVoulez-vous vraiment continuer ?",
+            "exit_login": "quitter:déjàconnecté",
+            "load_mkacc": "la création du compte...",
+            "restart": "Veuillez redémarrer JSM pour continuer.",
+            "first_login": "C'est la première fois que vous vous connectez ! Votre UUID est ",
+            "first_login_2": ".\nPartagez-le avec quelqu'un pour lui permettre de vous ajouter en tant qu'ami.\n\nPour ajouter quelqu'un comme ami, entrez ",
+            "first_login_3": " Pour nommer le champ de saisie."
+        },
+        "exception": {
+            "pkgloss": "perte de paquet @ serveur : rétablissement des connexions...",
+            "errloop": "Boucle d'erreur détectée : JSM fatalement terminé",
+            "dlv": "Commande obsolète. (utilisez ctrl+l à la place)",
+            "reconnect": "connexion rétablie",
+            "nosupport": "Désolé, votre terminal ne prend pas en charge JSM.",
+            "newkb": "Depuis la v1.5.0, les touches b et y sont obsolètes.\nVeuillez utiliser les touches Entrée et Retour arrière à la place."
+        },
+        "menu": {
+            "welcome": "Bienvenue!",
+            "info": "Pour continuer, appuyez sur Entrée pour entrer dans le menu du canal ou entrez une commande.\ntapez 'help' pour une liste de commandes.",
+            "ucmd": "Commande inconnue.",
+            "ch": {
+                "info": "appuyez sur les touches < ou > pour naviguer, enter pour valider et backspace pour revenir en arrière :",
+                "new": "Nouvelle Chaîne",
+                "find": "Rechercher une chaîne",
+                "nc": {
+                    "enter_name": "Entrez le nom de la chaîne (appuyez sur Entrée pour un nom aléatoire)"
+                },
+                "fc": {},
+                "creating": "Création de la chaîne...",
+                "created": "Chaîne créée.",
+                "joining": "Rejoindre la chaîne ",
+                "leave": "quitter le canal...",
+                "connect": "Connexion à ",
+                "enoch": "Aucun canal de ce type n'existe avec l'identifiant "
+            }
+        },
+        "messages": {
+            "FC_AWAIT_SEND_MESSAGE": "Envoi en cours..."
+        },
+        "quit": {
+            "quit_1": "Quitter JSM...",
+            "quit_noacc": "Quittez JSM sans créer de compte.",
+            "quit_2": "Quittez JSM."
+        },
+        "menus": {
+            "friends": {
+                "load": "Chargement des amis utilisateurs...",
+                "ealrfr": "Cet utilisateur est déjà votre ami.",
+                "addToList": "Cet utilisateur a été ajouté à votre liste d'amis !",
+                "nowFriend": " est maintenant ton ami"
+            },
+            "mail": {
+                "load": "Téléchargement du trousseau de messagerie..."
+            }
+        }
+    },
+    "ERR_UNX": "Cet utilisateur n'existe pas!"
+}
